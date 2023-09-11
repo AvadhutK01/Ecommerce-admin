@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Expense Tracker</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container bg-body-tertiary">
+        <label class="h2 d-flex justify-content-center mb-4">E-Commerce Admin</label>
+        <form class="d-flex justify-content-between">
+            <div class="mx-3 my-1">
+                <label for="amount">Enter amount: </label>
+                <input type="number" id="amount" required name="amount" />
+            </div>
+            <div class="mx-3 my-1">
+                <label for="description">Enter Product Name: </label>
+                <input type="text" id="p_name" required name="description" />
+            </div>
+            <input type="submit" class=" mx-3 my-1 mb-1 px-4 py-0 text-light bg-primary btn btn-secondary mb-2
+            " value="Add" id="submit"></input>
+        </form>
+        <div class="h4 d-flex justify-content-center align-items-center mb-2 mt-2 amount" id="tamount">
+
+        </div>
+        <div>
+            <table class="table" id="table">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tablebody" class="text-center">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"
+        integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
