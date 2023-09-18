@@ -4,38 +4,47 @@ let Pname = document.getElementById("p_name");
 let tabel = document.getElementById("table");
 let tabelbody = document.getElementById("tablebody");
 let totaldiv = document.getElementById("tamount");
-let sum = 0;
-submit.addEventListener("click", (e => {
+let sum = parseInt(localStorage.getItem("Tamount") != null ? localStorage.getItem("Tamount") : 0);
+submit.addEventListener("click", async (e) => {
     e.preventDefault();
     if (amount.value == "" || Pname.value == "") {
         alert('Please fill all the fields');
-    }
-    else {
-        let data = ({
-            "amount": amount.value, "Product-name": Pname.value
-        })
-        axios.post("https://crudcrud.com/api/9a92d07b72634935968a419db4a1eb8d/EcommerceData", data, {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then((res => {
-            showUser(res.data)
-            findTotalAmount(parseInt(data["amount"]), "add");
-        })).catch(err => console.log(err));
+    } else {
+        let data = {
+            "amount": amount.value,
+            "Product-name": Pname.value,
+        };
 
+        try {
+            const response = await axios.post(
+                "https://crudcrud.com/api/b6f823f990be48e08bb342ec9d0cfe51/EcommerceData",
+                data,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            showUser(response.data);
+            findTotalAmount(parseInt(data["amount"]), "add");
+        } catch (err) {
+            console.log(err);
+        }
     }
-}));
+});
+
 function showUser(data) {
-    let inforparsed = data;
     let tr = document.createElement("tr");
-    tr.setAttribute("userid", inforparsed._id);
+    tr.setAttribute("userid", data._id);
     let td1 = document.createElement("td");
     td1.id = "td1";
-    td1.appendChild(document.createTextNode(inforparsed["amount"] + " "));
+    td1.appendChild(document.createTextNode(data["amount"]));
+    td1.setAttribute("amount", data["amount"]);
     tr.appendChild(td1);
     let td2 = document.createElement("td");
     td2.className = "td2";
-    td2.appendChild(document.createTextNode(inforparsed["Product-name"] + " "));
+    td2.appendChild(document.createTextNode(data["Product-name"]));
     tr.appendChild(td2);
     let td3 = document.createElement("td");
     var delbutton = document.createElement('button');
@@ -47,37 +56,53 @@ function showUser(data) {
     amount.value = "";
     Pname.value = "";
 }
+
 tabelbody.addEventListener("click", del);
-function del(e) {
+
+async function del(e) {
     if (e.target.classList.contains('delete')) {
         let Parelement = e.target.parentElement.parentElement;
         let userId = Parelement.getAttribute("userid");
-        axios.delete(`https://crudcrud.com/api/9a92d07b72634935968a419db4a1eb8d/EcommerceData/${userId}`).then(() => {
-            let textContent = Parelement.textContent.split(" ");
-            findTotalAmount(parseInt(textContent[0]), "sub");
-            tabelbody.removeChild(Parelement)
-        }).catch((err) => {
+
+        try {
+            await axios.delete(
+                `https://crudcrud.com/api/b6f823f990be48e08bb342ec9d0cfe51/EcommerceData/${userId}`
+            );
+
+            let td = Parelement.parentElement.querySelector("#td1");
+            let amount = parseInt(td.getAttribute("amount"));
+            findTotalAmount(amount, "sub");
+            tabelbody.removeChild(Parelement);
+        } catch (err) {
             console.log(err);
-        })
+        }
     }
 }
-window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/9a92d07b72634935968a419db4a1eb8d/EcommerceData").then(res => {
-        for (let i = 0; i < res.data.length; i++) {
-            showUser(res.data[i]);
+
+window.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const response = await axios.get(
+            "https://crudcrud.com/api/b6f823f990be48e08bb342ec9d0cfe51/EcommerceData"
+        );
+
+        for (let i = 0; i < response.data.length; i++) {
+            showUser(response.data[i]);
         }
-    }).catch(err => {
+        findTotalAmount();
+    } catch (err) {
         console.log(err);
-    })
-})
+    }
+});
+
 function findTotalAmount(totalAmount, type) {
     if (type === "add") {
         sum = sum + totalAmount;
-    }
-    else {
+    } else if (type === "sub") {
         if (sum !== 0) {
             sum = sum - totalAmount;
         }
     }
-    totaldiv.textContent = "Total amount of Products is: " + sum + " Rs";
+    localStorage.setItem("Tamount", sum);
+    let Tsum = localStorage.getItem("Tamount");
+    totaldiv.textContent = "Total amount of Products is: " + Tsum + " Rs";
 }
